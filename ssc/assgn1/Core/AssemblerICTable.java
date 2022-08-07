@@ -1,6 +1,5 @@
 package Core;
 
-import Core.ICElement;
 import java.util.*;
 
 public class AssemblerICTable {
