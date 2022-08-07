@@ -9,5 +9,5 @@ public class AssemblerIntermediateResult {
     public AssemblerTable symbolTable;
     public AssemblerTable registerTable;
     public List<Integer> poolTable;
-    public List<String> literalTable;
+    public AssemblerTable literalTable;
 }

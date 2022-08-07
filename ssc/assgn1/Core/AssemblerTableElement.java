@@ -33,7 +33,11 @@ public class AssemblerTableElement {
     }
 
     public String getNameOpCode() {
-        return this.opcode + "\t" + this.name + "\t" + this.value;
+        return this.opcode + "\t" + this.name + "\t" + this.address;
+    }
+
+    public String getLiteralValueString() {
+        return String.format("(C, %d)", this.address);
     }
 
 }

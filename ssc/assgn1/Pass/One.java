@@ -15,7 +15,8 @@ public class One {
     AssemblerTable optab;
     AssemblerTable registerTable;
     List<Integer> poolTable;
-    List<String> literalTable;
+    AssemblerTable literalTable;
+    int literalCount = 0;
 
     public One(String __fn) {
         FILE_NAME = __fn;
@@ -40,6 +41,10 @@ public class One {
     String getParsedOperandForInstruction(String x) {
         if (registerTable.containsKey(x)) {
             x = registerTable.get(x).toString();
+        } else if (x.startsWith("=")) {
+            // then this is a literal
+            literalTable.set(x, "L", String.format("%s", literalCount));
+            literalCount++;
         } else if (isSymbol(x)) {
             symbolTable.set(x, "S", null);
         }
@@ -92,8 +97,11 @@ public class One {
             optab = getOptab();
             registerTable = getRegTable();
             symbolTable = new AssemblerTable("SYMBOL");
+            literalTable = new AssemblerTable("LITERAL");
             List<Integer> poolTable = new ArrayList<Integer>();
             poolTable.add(0);
+
+            // System.out.println(" --- \n\n");
 
             boolean isStop = false;
             int lc = 0;
@@ -126,10 +134,36 @@ public class One {
                             if (tokens.hasMoreTokens()) {
                                 // eg type: X+3
                                 // ! STILL REMAINING TO IMPLEMENT
+                                String operand = tokens.nextToken();
+                                String[] operands = operand.split("\\+");
+                                if (operands.length == 2) {
+                                    String symbolX = operands[0];
+                                    String offset = operands[1];
+                                    int nxtLc;
+                                    if (isNumeric(offset)) {
+                                        nxtLc = symbolTable.get(symbolX).address + Integer.parseInt(offset);
+                                    } else {
+                                        System.out.println("ERROR: ORIGIN directive offset is invalid");
+                                        return null;
+                                    }
+
+                                    AssemblerTableElement element = new AssemblerTableElement("ORIGIN", "C",
+                                            Integer.toString(lc));
+
+                                    ic.add(nextToken, lc, optab.get("ORIGIN").toString(), null, element.toString());
+                                    lc = nxtLc - 1;
+                                } else {
+                                    System.out.println("ERROR: ORIGIN directive invalid operand");
+                                    return null;
+                                }
                             } else {
                                 System.out.println("ERROR: ORIGIN directive must have an operand");
                                 return null;
                             }
+                        } else if (nextToken.equals("LTORG")) {
+                            lc = literalTable.giveAddressFrom(lc, ic, optab.get("LTORG"), optab.get("DC"),
+                                    literalTable);
+
                         } else if (isStop) {
                             // * now only declarative statements should be there
                             if (!tokens.hasMoreTokens()) {
@@ -143,7 +177,6 @@ public class One {
                                 return null;
                             }
                             String operand1 = tokens.nextToken();
-
                             if (inst.equals("DC")) {
                                 symbolTable.update(symbolLabel, String.format("%d", (symbolCount)),
                                         (lc), Integer.parseInt(operand1));
@@ -154,7 +187,7 @@ public class One {
                                     ic.add("-", lc, null, null, null);
                                     lc++;
                                 }
-                                symbolTable.update(symbolLabel, Integer.toString(spaceCount), (lc), 0);
+                                symbolTable.update(symbolLabel, String.format("%d", (symbolCount)), (lc), 0);
                             }
                             symbolCount++;
                         } else {
@@ -164,24 +197,37 @@ public class One {
                                 isStop = true;
                             }
                             if (ate == null) {
-                                // ic.add(nextToken, lc, null, null, null);
                                 // * this means its label
+                                symbolTable.set(nextToken, "S", null);
+                                symbolTable.update(nextToken, String.format("%d", (symbolCount)),
+                                        (lc), 0);
+                                symbolCount++;
 
-                            } else {
-
-                                // * if it is a directive
-                                String operand1, operand2;
-                                if (tokens.hasMoreTokens()) {
-                                    operand1 = getParsedOperandForInstruction(tokens.nextToken());
-
-                                    if (tokens.hasMoreTokens()) {
-                                        operand2 = getParsedOperandForInstruction(tokens.nextToken());
-                                        ic.add(nextToken, lc, ate.toString(), operand1, operand2);
-                                    } else
-                                        ic.add(nextToken, lc, ate.toString(), null, operand1);
+                                if (!tokens.hasMoreTokens()) {
+                                    System.out.println("ERROR: No more tokens");
+                                    return null;
                                 }
-                                ic.add(nextToken, lc, ate.toString(), null, null);
+                                nextToken = tokens.nextToken();
+                                ate = optab.get(nextToken);
+                                if (ate == null) {
+                                    System.out.println("ERROR: Invalid instruction near " + nextToken);
+                                    return null;
+                                }
                             }
+
+                            // * if it is a directive
+                            String operand1, operand2;
+                            if (tokens.hasMoreTokens()) {
+                                operand1 = getParsedOperandForInstruction(tokens.nextToken());
+
+                                if (tokens.hasMoreTokens()) {
+                                    operand2 = getParsedOperandForInstruction(tokens.nextToken());
+                                    ic.add(nextToken, lc, ate.toString(), operand1, operand2);
+                                } else
+                                    ic.add(nextToken, lc, ate.toString(), null, operand1);
+                            } else
+                                ic.add(nextToken, lc, ate.toString(), null, null);
+
                         }
                         lc++;
                     }

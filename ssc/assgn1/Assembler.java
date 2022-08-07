@@ -15,8 +15,10 @@ public class Assembler {
         AssemblerIntermediateResult intermediate_result = pass1.run();
 
         System.out.println("ADDRESS\tINSTRUCTION\tOPERAND1\tOPERAND2\n");
-        System.out.println(intermediate_result.ic.toString("\t", intermediate_result.symbolTable));
+        System.out.println(intermediate_result.ic.toString("\t", intermediate_result.symbolTable,
+                intermediate_result.literalTable));
         System.out.println("SYMBOL TABLE: \n" + intermediate_result.symbolTable.toString());
+        System.out.println("LITERAL TABLE: \n" + intermediate_result.literalTable.toString());
 
     }
 }

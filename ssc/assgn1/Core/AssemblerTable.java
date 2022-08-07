@@ -12,15 +12,20 @@ public class AssemblerTable {
     }
 
     public void set(String __name, String __optype, String __opcode) {
+        // System.out.println("Setting " + __name + " of " + __optype + " to " +
+        // __opcode);
         thisTable.put(__name, new AssemblerTableElement(__name, __optype, __opcode));
     }
 
     public void update(String __name, String __opcode, Integer __address, Integer value) {
         AssemblerTableElement x = thisTable.get(__name);
-        x.opcode = __opcode;
-        x.address = __address;
-        x.value = value;
-        thisTable.put(__name, x);
+        // System.out.println("updating " + __name + " of " + x.type + " to " +
+        // __opcode);
+        x.opcode = __opcode == null ? x.opcode : __opcode;
+        x.address = __address == null ? x.address : __address;
+        x.value = value == null ? x.value : value;
+        // thisTable.remove(__name);
+        // thisTable.put(__name, x);
     }
 
     public AssemblerTableElement get(String __name) {
@@ -42,6 +47,19 @@ public class AssemblerTable {
         }
 
         return x;
+    }
+
+    public Integer giveAddressFrom(int __addr, AssemblerICTable ic, AssemblerTableElement inst1,
+            AssemblerTableElement inst2, AssemblerTable literalTable) {
+        for (String key : this.thisTable.keySet()) {
+            AssemblerTableElement x = this.thisTable.get(key);
+            x.address = __addr;
+            ic.add(Integer.toString(__addr), __addr, inst1.toString(), inst2.toString(),
+                    x.getLiteralValueString());
+            literalTable.update(x.name, null, __addr, __addr);
+            __addr++;
+        }
+        return __addr - 1;
     }
 
 }
