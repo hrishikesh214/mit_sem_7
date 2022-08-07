@@ -15,6 +15,7 @@ public class One {
     AssemblerTable optab;
     AssemblerTable registerTable;
     List<Integer> poolTable;
+    List<String> literalTable;
 
     public One(String __fn) {
         FILE_NAME = __fn;
@@ -84,8 +85,9 @@ public class One {
         return regTable;
     }
 
-    public void run() {
+    public AssemblerIntermediateResult run() {
         try {
+            AssemblerIntermediateResult result = new AssemblerIntermediateResult();
             ic = new AssemblerICTable();
             optab = getOptab();
             registerTable = getRegTable();
@@ -102,7 +104,7 @@ public class One {
             try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
                 String inputLine;
                 try {
-                    System.out.println("ADDRESS\tINSTRUCTION\tOPERAND1\tOPERAND2\n");
+
                     while ((inputLine = br.readLine()) != null) {
                         StringTokenizer tokens = new StringTokenizer(inputLine);
                         String nextToken = tokens.nextToken();
@@ -118,7 +120,7 @@ public class One {
                                 ic.add(nextToken, null, optab.get("START").toString(), null, element.toString());
                             } else {
                                 System.out.println("ERROR: START directive must have an operand");
-                                return;
+                                return null;
                             }
                         } else if (nextToken.equals("ORIGIN")) { // * CHECK FOR ORIGIN
                             if (tokens.hasMoreTokens()) {
@@ -126,19 +128,19 @@ public class One {
                                 // ! STILL REMAINING TO IMPLEMENT
                             } else {
                                 System.out.println("ERROR: ORIGIN directive must have an operand");
-                                return;
+                                return null;
                             }
                         } else if (isStop) {
                             // * now only declarative statements should be there
                             if (!tokens.hasMoreTokens()) {
                                 System.out.println("ERROR: No more tokens");
-                                return;
+                                return null;
                             }
                             String symbolLabel = nextToken;
                             String inst = tokens.nextToken();
                             if (!tokens.hasMoreTokens()) {
                                 System.out.println("ERROR: No more tokens");
-                                return;
+                                return null;
                             }
                             String operand1 = tokens.nextToken();
 
@@ -183,9 +185,7 @@ public class One {
                         }
                         lc++;
                     }
-                    System.out.println(ic.toString("\t", symbolTable));
 
-                    System.out.println("SYMBOL TABLE: \n" + symbolTable.toString());
                     br.close();
                 } catch (IOException ioe) {
                     System.out.println(ioe);
@@ -196,12 +196,20 @@ public class One {
                 e.printStackTrace();
             }
 
+            // * store in result object
+            result.literalTable = literalTable;
+            result.ic = ic;
+            result.symbolTable = symbolTable;
+            result.poolTable = poolTable;
+            result.registerTable = registerTable;
+            return result;
+
         } catch (
 
         FileNotFoundException e) {
             System.out.println("INPUT FILE NOT FOUND: " + FILE_NAME);
         }
-
+        return null;
     }
 }
 
