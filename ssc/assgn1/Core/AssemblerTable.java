@@ -40,6 +40,10 @@ public class AssemblerTable {
         return this.thisTable.containsKey(key);
     }
 
+    public int getSize() {
+        return this.thisTable.size();
+    }
+
     public String toString() {
         String x = new String();
         for (String key : this.thisTable.keySet()) {
@@ -60,6 +64,16 @@ public class AssemblerTable {
             __addr++;
         }
         return __addr - 1;
+    }
+
+    public AssemblerTableElement getElementFromIndex(int i) {
+        AssemblerTableElement x = null;
+        for (String key : this.thisTable.keySet()) {
+            x = this.thisTable.get(key);
+            if (Integer.parseInt(x.opcode) == i)
+                break;
+        }
+        return x;
     }
 
 }

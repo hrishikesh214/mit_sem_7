@@ -37,7 +37,7 @@ public class AssemblerTableElement {
     }
 
     public String getLiteralValueString() {
-        return String.format("(C, %d)", this.address);
+        return String.format("(C, %d)", Integer.parseInt(this.name.substring(2, this.name.length() - 1)));
     }
-
+    // public String
 }

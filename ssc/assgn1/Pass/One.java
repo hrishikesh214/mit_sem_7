@@ -55,17 +55,17 @@ public class One {
     AssemblerTable getOptab() {
         AssemblerTable optab = new AssemblerTable("OPTAB");
 
-        optab.set("STOP", "LS", "00");
-        optab.set("ADD", "LS", "01");
-        optab.set("SUB", "LS", "02");
-        optab.set("MULT", "LS", "03");
-        optab.set("MOVER", "LS", "04");
-        optab.set("MOVEM", "LS", "05");
-        optab.set("COMP", "LS", "06");
-        optab.set("BC", "LS", "07");
-        optab.set("DIV", "LS", "08");
-        optab.set("READ", "LS", "09");
-        optab.set("PRINT", "LS", "10");
+        optab.set("STOP", "IS", "00");
+        optab.set("ADD", "IS", "01");
+        optab.set("SUB", "IS", "02");
+        optab.set("MULT", "IS", "03");
+        optab.set("MOVER", "IS", "04");
+        optab.set("MOVEM", "IS", "05");
+        optab.set("COMP", "IS", "06");
+        optab.set("BC", "IS", "07");
+        optab.set("DIV", "IS", "08");
+        optab.set("READ", "IS", "09");
+        optab.set("PRINT", "IS", "10");
 
         optab.set("DC", "DL", "01");
         optab.set("DS", "DL", "02");
@@ -83,8 +83,8 @@ public class One {
     AssemblerTable getRegTable() {
         AssemblerTable regTable = new AssemblerTable("REGISTER");
         String optype = "R";
-        regTable.set("AREG", optype, "00");
-        regTable.set("BREG", optype, "01");
+        regTable.set("AREG", optype, "01");
+        regTable.set("BREG", optype, "02");
         regTable.set("CREG", optype, "03");
         regTable.set("DREG", optype, "04");
         return regTable;
@@ -163,6 +163,8 @@ public class One {
                         } else if (nextToken.equals("LTORG")) {
                             lc = literalTable.giveAddressFrom(lc, ic, optab.get("LTORG"), optab.get("DC"),
                                     literalTable);
+
+                            poolTable.add(literalTable.getSize());
 
                         } else if (isStop) {
                             // * now only declarative statements should be there
@@ -261,28 +263,40 @@ public class One {
 
 /*
  * 
- * REGISTER opcode
- * AREG 01
- * BREG 02
- * CREG 03
+ * ADDRESS INSTRUCTION OPERAND1 OPERAND2
+ * 
+ * (AD, 01) (C, 100)
+ * 101 (LS, 09) (S, 3)
+ * 102 (LS, 04) (R, 01) (S, 1)
+ * 103 (LS, 05) (R, 00) (S, 2)
+ * 104 (LS, 05) (R, 03) (L, 0)
+ * 105 (LS, 05) (R, 04) (L, 1)
+ * 106 (AD, 03) (C, 106)
+ * 112 (AD, 05) (DL, 01) (C, 12)
+ * 113 (AD, 05) (DL, 01) (C, 1)
+ * 114 (LS, 00)
+ * 117
+ * (AD, 02)
+ * 
+ * SYMBOL TABLE:
+ * 1 ONE 115
+ * 0 l1 102
+ * 2 TERM 118
+ * 3 N 119
+ * 
+ * LITERAL TABLE:
+ * 1 ='12' 112
+ * 0 ='1' 113
+ * 
+ * POOL TABLE
+ * 0 0
+ * 1 2
  * 
  * 
- * ADDRESS opcode OP1 OP2
- * --- 0 101
- * 101 (LS, 09) 0 201
- * 102 (LS, 04) 01 202
- * 103 (LS, 05) 02 203
- * 104 (LS, 00)
- * 105
- * 106
- * 107
- * ---
- * 
- * 
- * Symbol table
- * LABEL ADDRESS
- * N 201
- * ONE 202
- * TERM 203
- * 
+ * Machine Code
+ * 09 00 119
+ * 04 01 115
+ * 05 00 118
+ * 05 03 102
+ * ...
  */

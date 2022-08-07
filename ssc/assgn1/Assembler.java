@@ -1,4 +1,5 @@
 import Pass.One;
+import Pass.Two;
 
 import Core.AssemblerIntermediateResult;
 
@@ -14,11 +15,14 @@ public class Assembler {
         One pass1 = new One(inputFile);
         AssemblerIntermediateResult intermediate_result = pass1.run();
 
-        System.out.println("ADDRESS\tINSTRUCTION\tOPERAND1\tOPERAND2\n");
-        System.out.println(intermediate_result.ic.toString("\t", intermediate_result.symbolTable,
-                intermediate_result.literalTable));
-        System.out.println("SYMBOL TABLE: \n" + intermediate_result.symbolTable.toString());
-        System.out.println("LITERAL TABLE: \n" + intermediate_result.literalTable.toString());
+        intermediate_result.print();
+
+        System.out.println("\n\n");
+
+        Two pass2 = new Two(intermediate_result);
+        String machine_code = pass2.run();
+
+        System.out.println("Machine code: \n" + machine_code);
 
     }
 }
