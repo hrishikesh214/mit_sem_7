@@ -1,8 +1,9 @@
 package Core;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class AssemblerTable {
+public class AssemblerTable implements Serializable {
     Hashtable<String, AssemblerTableElement> thisTable;
     String thisTableType;
 
@@ -44,6 +45,7 @@ public class AssemblerTable {
         return this.thisTable.size();
     }
 
+    @Override
     public String toString() {
         String x = new String();
         for (String key : this.thisTable.keySet()) {

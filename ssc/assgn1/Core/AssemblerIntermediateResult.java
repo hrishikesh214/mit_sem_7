@@ -1,10 +1,11 @@
 package Core;
 
+import java.io.Serializable;
 import java.util.*;
 // import Core.AssemblerICTable;
 // import Core.AssemblerTable;
 
-public class AssemblerIntermediateResult {
+public class AssemblerIntermediateResult implements Serializable {
     public AssemblerICTable ic;
     public AssemblerTable symbolTable;
     public AssemblerTable registerTable;
@@ -12,15 +13,20 @@ public class AssemblerIntermediateResult {
     public AssemblerTable literalTable;
 
     public void print() {
-        System.out.println("ADDRESS\tINSTRUCTION\tOPERAND1\tOPERAND2\n");
-        System.out.println(ic.toString("\t", symbolTable,
-                literalTable));
-        System.out.println("SYMBOL TABLE: \n" + symbolTable.toString());
-        System.out.println("LITERAL TABLE: \n" + literalTable.toString());
+        System.out.println(this.toString());
+    }
 
-        System.out.println("POOL TABLE");
+    @Override
+    public String toString() {
+        String x = "";
+        x += "ADDRESS\tINSTRUCTION\tOPERAND1\tOPERAND2\n";
+        x += ic.toString("\t", symbolTable, literalTable) + "\n";
+        x += "SYMBOL TABLE: \n" + symbolTable.toString() + "\n";
+        x += "LITERAL TABLE: \n" + literalTable.toString() + "\n";
+        x += "POOL TABLE\n";
         for (int i = 0; i < poolTable.size(); i++) {
-            System.out.println(i + "\t" + poolTable.get(i));
+            x += i + "\t" + poolTable.get(i) + "\n";
         }
+        return x;
     }
 }

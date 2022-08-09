@@ -1,6 +1,8 @@
 package Core;
 
-public class AssemblerTableElement {
+import java.io.Serializable;
+
+public class AssemblerTableElement implements Serializable {
     public String name;
     public String opcode;
     public String type;

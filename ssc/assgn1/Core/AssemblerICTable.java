@@ -1,8 +1,9 @@
 package Core;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class AssemblerICTable {
+public class AssemblerICTable implements Serializable {
     List<ICElement> thisTable;
 
     public AssemblerICTable() {

@@ -1,6 +1,8 @@
 package Core;
 
-public class ICElement {
+import java.io.Serializable;
+
+public class ICElement implements Serializable {
     public Integer address;
     public String instruction;
     public String operand1;
