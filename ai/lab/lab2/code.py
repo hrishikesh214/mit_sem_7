@@ -1,3 +1,8 @@
+"""
+PB76 Hrishikesh Vaze
+AI Lab 2 - MinMax(TictacToe)
+"""
+
 import os
 from prettytable import PrettyTable
 from icecream import ic
