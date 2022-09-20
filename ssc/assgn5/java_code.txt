@@ -1,0 +1,12 @@
+import java.io.*;
+
+public class first(){
+    public static void main(String args[]){
+        int i, j, sum1;
+        i = 10;
+        j = 20;
+        sum1 = i + j;
+        System.out.println("Addition is "+sum1);
+        pass1();
+    }
+}
