@@ -48,20 +48,24 @@ public class Two {
                 while (true) {
                     MacroTableElement mdtEle = mdt.get(Integer.toString(mdtIndex));
                     String currLine = mdtEle.col1;
-
+                    StringTokenizer lineTokens = new StringTokenizer(currLine);
+                    String newCurrLine = "+";
                     if (mdtEle.col1.equals("MEND")) {
                         break;
                     }
-                    while (tokens.hasMoreTokens()) {
-                        nextToken = tokens.nextToken();
+                    // System.out.println(currLine);
+                    while (lineTokens.hasMoreTokens()) {
+                        nextToken = lineTokens.nextToken();
+                        // System.out.println("\t"+nextToken);
                         if (nextToken.startsWith("#")) {
-                            currLine += " " + mdtEle.ala.get(nextToken).col2;
+                            newCurrLine += " " + ele.ala.get(nextToken).col2;
+                            // System.out.println("\t\t"+currLine);
                         } else {
-                            currLine += " " + nextToken;
+                            newCurrLine += " " + nextToken;
                         }
                     }
 
-                    outputFileContent.add(currLine);
+                    outputFileContent.add(newCurrLine);
 
                     mdtIndex++;
                 }

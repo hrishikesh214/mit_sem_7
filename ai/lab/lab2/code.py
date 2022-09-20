@@ -20,10 +20,11 @@ board = [
     [AVAILABLE, AVAILABLE, AVAILABLE]
 ]
 
+
 def getBoardToPrint(board):
     xb = [
-        [' ', ' ',1, 2, 3],
-        [' ',' ',' ',' ', ' '],
+        [' ', ' ', 1, 2, 3],
+        [' ', ' ', ' ', ' ', ' '],
         [1, ' ', board[0][0], board[0][1], board[0][2]],
         [2, ' ', board[1][0], board[1][1], board[1][2]],
         [3, ' ', board[2][0], board[2][1], board[2][2]]
@@ -31,11 +32,13 @@ def getBoardToPrint(board):
 
     return xb
 
+
 def clear_screen():
     """
     This function clears the screen
     """
     os.system('cls' if os.name == 'nt' else 'clear')
+
 
 def getPrettyTable(board):
     """
@@ -51,7 +54,6 @@ scores = {
     'Tie': 0,
     'X': 1,
     'O': -1
-
 }
 
 
@@ -65,8 +67,8 @@ class TicTacToe:
         self.winner = None
         self.game_over = False
         self.ai_message = ''
-        self.current_player = HUMAN # initially human will play first
-    
+        self.current_player = HUMAN  # initially human will play first
+
     def draw_board(self):
         """
         This function draws the board with the help of PrettyTable Lib
@@ -75,10 +77,12 @@ class TicTacToe:
         print("\n")
         xb = getPrettyTable(self.board)
 
-        print("TicTacToe Game | " ,end="")
+        print("TicTacToe Game | ", end="")
         if not self.game_over:
-            print(f"Current Player: {'Human, O' if self.current_player == HUMAN else 'AI, X'}")
-            print(f"AI {self.ai_message if self.ai_message != '' else 'waiting...' if self.current_player == HUMAN else 'thinking...'}")
+            print(
+                f"Current Player: {'Human, O' if self.current_player == HUMAN else 'AI, X'}")
+            print(
+                f"AI {self.ai_message if self.ai_message != '' else 'waiting...' if self.current_player == HUMAN else 'thinking...'}")
         else:
             print("Game Over | ", end='')
             if self.winner == HUMAN:
@@ -93,7 +97,7 @@ class TicTacToe:
         print('\n')
         print(xb)
         print("\n\n")
-    
+
     def make_turn(self):
         """
         This function takes the turn of the current player
@@ -103,10 +107,10 @@ class TicTacToe:
             hi = hi.split(',')
             hi = [int(i) for i in hi]
             # print(hi)
-            if(hi[0] == -1):
+            if (hi[0] == -1):
                 self.game_over = True
                 return
-            if((not(1 <= hi[0] <= 3) or not(1 <= hi[1] <= 3)) or self.board[hi[0]-1][hi[1]-1] != AVAILABLE):
+            if ((not (1 <= hi[0] <= 3) or not (1 <= hi[1] <= 3)) or self.board[hi[0]-1][hi[1]-1] != AVAILABLE):
                 print("\nInvalid input")
                 self.make_turn()
                 return
@@ -125,7 +129,7 @@ class TicTacToe:
         # check rows
         for row in self.board:
             if row[0] == row[1] == row[2] != AVAILABLE:
-                return row[0],True
+                return row[0], True
         # check columns
         for i in range(3):
             if self.board[0][i] == self.board[1][i] == self.board[2][i] != AVAILABLE:
@@ -139,12 +143,12 @@ class TicTacToe:
         if AVAILABLE not in self.board[0] and AVAILABLE not in self.board[1] and AVAILABLE not in self.board[2]:
             return None, True
         return None, False
-    
+
     def switch_player(self):
         """
         This function switches the player
         """
-        if self.game_over: 
+        if self.game_over:
             return
         if self.current_player == HUMAN:
             self.current_player = AI
@@ -158,12 +162,13 @@ class TicTacToe:
         if self.game_over:
             return
         best_score = -1000
-        best_move = [-1,-1]
+        best_move = [-1, -1]
         for i in range(3):
             for j in range(3):
                 if self.board[i][j] == AVAILABLE:
                     self.board[i][j] = AI
-                    score = self.MinMax( 0, False) # as this is max player we will chack for min player
+                    # as this is max player we will chack for min player
+                    score = self.MinMax(0, False)
                     # ic(i,j,score)
                     self.board[i][j] = AVAILABLE
                     if score > best_score:
@@ -182,7 +187,7 @@ class TicTacToe:
         """
         winner, is_completed = self.check_winner()
         if is_completed:
-            if winner is not None: 
+            if winner is not None:
                 return scores[winner]
             else:
                 return scores['Tie']
@@ -192,7 +197,7 @@ class TicTacToe:
                 for j in range(3):
                     if self.board[i][j] == AVAILABLE:
                         self.board[i][j] = AI
-                        score = self.MinMax( depth + 1, False)
+                        score = self.MinMax(depth + 1, False)
                         self.board[i][j] = AVAILABLE
                         best_score = max(score, best_score)
             return best_score
@@ -221,12 +226,13 @@ class TicTacToe:
                 self.game_over = True
                 self.winner = winner
             self.switch_player()
-        
+
         self.draw_board()
 
 
 def main():
     game = TicTacToe()
     game.run()
+
 
 main()
