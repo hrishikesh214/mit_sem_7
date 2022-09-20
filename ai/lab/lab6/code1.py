@@ -1,28 +1,33 @@
 import os
 import numpy as np
 import tensorflow as tf
+import cv2
 from tensorflow import keras
 
-training_input = [
-    [i] for i in range(1000)
-]
+mnist = keras.datasets.mnist
+(X_train, y_train), (X_test, y_test) = mnist.load_data()
 
-training_output =[
-    [i*i] for i in range(1000)
-]
+X_train = X_train / 255.0
+X_test = X_test / 255.0
 
-X_train, X_test = training_input[:800], training_input[800:]
-y_train, y_test = training_output[:800], training_output[800:]
+# training model
+# model = keras.Sequential()
+# model.add(keras.layers.Flatten(input_shape=(28,28)))
+# model.add(keras.layers.Dense(128, activation=tf.nn.relu))
+# model.add(keras.layers.Dense(10, activation=tf.nn.softmax))
+# model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+# history = model.fit(X_train, y_train, epochs=10)
+# model.save('model.h5')
+# print(history)
 
-if False:
-    # training model
-    model = keras.Sequential()
-    model.add(keras.layers.Dense(1, input_shape=(1,1)))
-    model.compile(optimizer='sgd', loss='mse', metrics=['mse'])
-    history = model.fit(X_train, y_train, epochs=10)
-    model.save('squaring_model.h5')
-    print(history)
-else:
-    # loading model
-    model = keras.models.load_model('squaring_model.h5')
-    print(model.predict([10]))
+# loading model
+model = keras.models.load_model('model.h5')
+img = cv2.imread('./test_digit.png', 0)
+
+# cv2.imshow('img', img)
+# cv2.waitKey(0)
+# img = cv2.resize(img, (28, 28))
+img.resize(28, 28)
+img = img / 255.0
+x = (model.predict([img]))
+print(np.argmax(x[0]))
