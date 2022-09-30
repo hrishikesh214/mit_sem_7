@@ -29,7 +29,7 @@ using namespace std;
 string inStr;
 int strP = 0;
 char curr;
-vector<char> identifiers({'a', 'i', 's'}), skippers({' ', '='});
+vector<char> identifiers({'a', 'i', 's'}), skippers({' '});
 
 void advance();
 bool E();
@@ -56,8 +56,8 @@ void advance()
 {
     strP++;
     curr = inStr[strP];
-    // if (vectorFind(skippers, curr))
-    //     advance();
+    if (vectorFind(skippers, curr))
+        advance();
 }
 
 // E  ->  TE'
@@ -108,6 +108,7 @@ bool F()
     if (vectorFind(identifiers, curr))
     {
         advance();
+        return true;
     }
     else
     {
@@ -116,21 +117,32 @@ bool F()
             advance();
             if (!E())
                 return false;
-            ;
             if (curr == ')')
+            {
                 advance();
+                return true;
+            }
+            else
+                return false;
         }
         else
         {
             return false;
         }
     }
-    return true;
 }
 
 int main()
 {
-    inStr = "s = a + (i + a)";
+    inStr = "(a + a  a)";
+
+    cout << endl
+         << "Enter string without space: ";
+    cin >> inStr;
+
+    cout << endl
+         << "String: " << inStr << endl;
+
     curr = inStr[strP];
 
     if (E())
