@@ -1,0 +1,27 @@
+ADDRESS	INSTRUCTION	OPERAND1	OPERAND2
+	(AD, 01)		(C, 100)
+101	(IS, 09)		(S, 3)
+102	(IS, 04)	(R, 02)	(S, 1)
+103	(IS, 05)	(R, 01)	(S, 2)
+104	(IS, 05)	(R, 03)	(L, 0)
+105	(IS, 05)	(R, 04)	(L, 1)
+106	(AD, 03)		(C, 106)
+112	(AD, 05)	(DL, 01)	(C, 12)
+113	(AD, 05)	(DL, 01)	(C, 1)
+114	(IS, 00)		
+117			
+	(AD, 02)		
+
+SYMBOL TABLE: 
+1	ONE	115
+0	l1	102
+2	TERM	118
+3	N	119
+
+LITERAL TABLE: 
+1	='12'	112
+0	='1'	113
+
+POOL TABLE
+0	0
+1	2
