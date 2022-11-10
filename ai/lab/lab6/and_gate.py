@@ -2,21 +2,24 @@ import numpy as np
 
 EPOCH = 10000
 
+
 def sigmoid(x):
     return 1/(1 + np.exp(-x))
+
 
 def sigmoid_derivative(x):
     return x*(1-x)
 
+
 training_input = np.array([
-    [0,0],
-    [0,1],
-    [1,0],
-    [1,1]
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
 ])
 
-# training_output = np.array([0,0,0,1]) # and
-training_output = np.array([0,1,1,1]) # or
+training_output = np.array([0, 0, 0, 1])  # and
+# training_output = np.array([0,1,1,1]) # or
 
 weights = [1]*len(training_input[0])
 
@@ -32,7 +35,7 @@ for i in range(EPOCH):
     weights += np.dot(input_layer.T, adjustments)
 
 
-weights = [round(i,2) for i in weights]
+weights = [round(i, 2) for i in weights]
 
 print('output:')
 print(outputs)
