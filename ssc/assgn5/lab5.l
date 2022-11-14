@@ -30,7 +30,7 @@ functionCall ({identifier}\((.*)\))
 
 systemClass (System)
 userDefinedClass (class{space}{identifier})
-predefinedFunction (println)
+predefinedFunction (println|main)
 
 
 %%
@@ -48,7 +48,6 @@ predefinedFunction (println)
 {userDefinedClass} {printf("[%s] => userDefinedClass\n", yytext);}
 {predefinedFunction} {printf("[%s] => predefinedFunction\n", yytext);}
 {arrayName} {printf("[%s] => arrayName\n", yytext);}
-{functionCall} {printf("[%s] => Function\n", yytext);}
 
 {accessSpecifier} {printf("[%s] => AccessSpecifier\n", yytext);}
 {keyword} {printf("[%s] => Keyword\n", yytext);}
